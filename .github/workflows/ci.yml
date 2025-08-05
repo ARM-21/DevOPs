@@ -27,6 +27,15 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
+    - name: Send build start notification
+      run: |
+        curl -X POST "${{ secrets.CI_KEY }}" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "text": "🚀 CI Pipeline Started",
+          "details": "Building commit: ${{ github.sha }}, Branch: ${{ github.ref_name }}"
+        }'
+    
     - name: Run build
       run: npm run build
     
@@ -38,5 +47,25 @@ jobs:
     
     - name: Run tests
       run: npm test
+    
+    - name: Send success notification
+      if: success()
+      run: |
+        curl -X POST "${{ secrets.CI_KEY }}" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "text": "✅ CI Pipeline Completed Successfully!",
+          "details": "All tests passed for commit: ${{ github.sha }}"
+        }'
+    
+    - name: Send failure notification
+      if: failure()
+      run: |
+        curl -X POST "${{ secrets.CI_KEY }}" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "text": "❌ CI Pipeline Failed",
+          "details": "Build failed for commit: ${{ github.sha }}, Branch: ${{ github.ref_name }}"
+        }'
     
   

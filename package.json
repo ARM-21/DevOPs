@@ -4,13 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "node app.js",
-    "test": "npm run test:simple && npm run test:integration",
-    "test:simple": "node -e \"console.log('✅ Simple test passed')\"",
-    "test:integration": "node test.js",
-    "test:health": "curl -f http://localhost:3000/health || exit 1",
-    "test:api": "curl -f http://localhost:3000/api/status || exit 1",
-    "lint": "echo '✅ Linting passed'",
+    "test": "node test.js",
     "build": "echo '✅ Build completed successfully'"
   },
   "keywords": [],

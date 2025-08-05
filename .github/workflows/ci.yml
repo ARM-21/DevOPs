@@ -32,8 +32,7 @@ jobs:
         curl -X POST "${{ secrets.CI_KEY }}" \
         -H "Content-Type: application/json" \
         -d '{
-          "text": "🚀 CI Pipeline Started",
-          "details": "Building commit: ${{ github.sha }}, Branch: ${{ github.ref_name }}"
+          "text": "🚀 *CI Pipeline Started*\nBuilding commit: `${{ github.sha }}`, Branch: `${{ github.ref_name }}`"
         }'
     
     - name: Run build
@@ -54,8 +53,7 @@ jobs:
         curl -X POST "${{ secrets.CI_KEY }}" \
         -H "Content-Type: application/json" \
         -d '{
-          "text": "✅ CI Pipeline Completed Successfully!",
-          "details": "All tests passed for commit: ${{ github.sha }}"
+          "text": "✅ *CI Pipeline Completed Successfully!*\nAll tests passed for commit: `${{ github.sha }}`"
         }'
     
     - name: Send failure notification
@@ -64,8 +62,7 @@ jobs:
         curl -X POST "${{ secrets.CI_KEY }}" \
         -H "Content-Type: application/json" \
         -d '{
-          "text": "❌ CI Pipeline Failed",
-          "details": "Build failed for commit: ${{ github.sha }}, Branch: ${{ github.ref_name }}"
+          "text": "❌ *CI Pipeline Failed*\nBuild failed for commit: `${{ github.sha }}`, Branch: `${{ github.ref_name }}`"
         }'
     
   

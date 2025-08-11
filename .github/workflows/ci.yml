@@ -44,7 +44,6 @@ jobs:
             projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             coverageExclusions: '**/node_modules/**'
             testInclusions: 'src/**/*.test.js'
-            # coverageReportPaths: 'coverage/lcov.info'.js project
 
       # Google Chat notification step
       - name: Send Google Chat notification

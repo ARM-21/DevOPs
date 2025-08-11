@@ -1,6 +1,4 @@
 name: CI
-# Simple and clean CI pipeline for Node.js project
-
 on:
   push:
     branches: [ main ]
@@ -37,16 +35,16 @@ jobs:
         run: npm test
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
+        uses: SonarSource/sonarcloud-github-action@v2.2.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            -Dsonar.sources=.
-            -Dsonar.exclusions=node_modules/**,test.js,**/*.test.js,.github/**
-            -Dsonar.scanner.force-deprecated-java-version-grace-period=true
+         
+            organization=${{ secrets.SONAR_ORGANIZATION }}
+            projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            coverageExclusions: '**/node_modules/**'
+            testInclusions: 'src/**/*.test.js'
+            # coverageReportPaths: 'coverage/lcov.info'.js project
 
       # Google Chat notification step
       - name: Send Google Chat notification

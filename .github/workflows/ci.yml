@@ -39,11 +39,11 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-         
-            organization=${{ secrets.SONAR_ORGANIZATION }}
-            projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-            coverageExclusions: '**/node_modules/**'
-            testInclusions: 'src/**/*.test.js'
+          args: >
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.exclusions=**/node_modules/**
+            -Dsonar.test.inclusions=test.js
 
       # Google Chat notification step
       - name: Send Google Chat notification

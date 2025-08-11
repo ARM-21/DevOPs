@@ -64,13 +64,13 @@ jobs:
           "text": "✅ *CI Pipeline Completed Successfully!*\nAll tests passed ✅\nSonarCloud scan completed ✅\nCommit: `${{ github.sha }}`"
         }'
     
-    - name: Send failure notification
-      if: failure()
-      run: |
-        curl -X POST "${{ secrets.CI_KEY }}" \
-        -H "Content-Type: application/json" \
-        -d '{
-          "text": "❌ *CI Pipeline Failed*\nBuild failed for commit: `${{ github.sha }}`, Branch: `${{ github.ref_name }}`"
-        }'
+    # - name: Send failure notification
+    #   if: failure()
+    #   run: |
+    #     curl -X POST "${{ secrets.CI_KEY }}" \
+    #     -H "Content-Type: application/json" \
+    #     -d '{
+    #       "text": "❌ *CI Pipeline Failed*\nBuild failed for commit: `${{ github.sha }}`, Branch: `${{ github.ref_name }}`"
+    #     }'
     
   

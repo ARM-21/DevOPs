@@ -38,6 +38,14 @@ jobs:
     - name: Run build
       run: npm run build
     
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v2
+      env:
+      # Automatically provided by GitHub
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+        SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+    
     - name: Start application in background
       run: npm start &
       
@@ -53,7 +61,7 @@ jobs:
         curl -X POST "${{ secrets.CI_KEY }}" \
         -H "Content-Type: application/json" \
         -d '{
-          "text": "✅ *CI Pipeline Completed Successfully!*\nAll tests passed for commit: `${{ github.sha }}`"
+          "text": "✅ *CI Pipeline Completed Successfully!*\nAll tests passed ✅\nSonarCloud scan completed ✅\nCommit: `${{ github.sha }}`"
         }'
     
     - name: Send failure notification

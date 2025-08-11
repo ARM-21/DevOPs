@@ -46,10 +46,11 @@ jobs:
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.sources=.
             -Dsonar.exclusions=node_modules/**,test.js,**/*.test.js,.github/**
+            -Dsonar.scanner.force-deprecated-java-version-grace-period=true
 
       # Google Chat notification step
       - name: Send Google Chat notification
-        if: success()  # Send notification whether job succeeds or fails
+        if: success()  # Send notification only on success
         run: |
           curl -X POST -H 'Content-Type: application/json' \
           -d '{

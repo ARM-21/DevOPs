@@ -1,11 +1,12 @@
 {
   "name": "devops",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "node test.js",
-    "build": "echo '✅ Build completed successfully'"
+    "build": "echo '✅ Build completed successfully'",
+    "test-hook": "bash .git/hooks/pre-commit"
   },
   "keywords": [],
   "author": "",

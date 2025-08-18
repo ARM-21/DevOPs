@@ -1,11 +1,12 @@
 {
   "name": "devops",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "start": "node app.js",
     "test": "node test.js",
     "build": "echo '✅ Build completed successfully'",
+    "setup-hooks": "cp scripts/git-hooks/* .git/hooks/ 2>/dev/null || echo 'Git hooks already configured' && chmod +x .git/hooks/*",
     "test-hook": "bash .git/hooks/pre-commit"
   },
   "keywords": [],

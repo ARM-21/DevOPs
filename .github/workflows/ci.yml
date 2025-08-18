@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build:ot just deployment. It's a broader tool that serves multiple purposes in the development lifecycle:
     runs-on: ubuntu-latest
 
     steps:
@@ -51,7 +51,7 @@ jobs:
         run: |
           curl -X POST -H 'Content-Type: application/json' \
           -d '{
-            "text": "🤖 *CI Pipeline Status: ${{ job.status }}*\n📁 Repository: ${{ github.repository }}\n🔄 Event: ${{ github.event_name }}\n👤 Triggered by: ${{ github.actor }}\n⚙️ Workflow: ${{ github.workflow }}\n📝 Commit: `${{ github.sha }}`\n🔗 View run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "text": "🤖 *CI Pipeline Status: ${{ job.status }}*\n📁 Repository: ${{ github.repository }}\n🔄 Event: ${{ github.event_name }}\n👤 Triggered by: ${{ github.actor }}\n⚙️ Workflow: ${{ github.workflow }}\n📝 Commit: `${{ github.sha }}`\n"
           }' \
           "${{ secrets.CI_KEY }}"
     

@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:ot just deployment. It's a broader tool that serves multiple purposes in the development lifecycle:
+  build:
     runs-on: ubuntu-latest
 
     steps:

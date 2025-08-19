@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+    
+    environment {
+        COMPOSE_PROJECT_NAME = "devops"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code...'
+                checkout scm
+            }
+        }
+        
+        stage('Setup') {
+            steps {
+                echo 'Setting up environment...'
+                sh 'chmod +x *.sh'
+                sh 'npm install'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'npm test'
+            }
+        }
+        
+        stage('Build & Deploy') {
+            steps {
+                echo 'Building and deploying with Docker Compose...'
+                sh 'docker-compose down || true'
+                sh 'docker-compose build'
+                sh 'docker-compose up -d'
+                
+                // Wait for services to start
+                sleep(time: 30, unit: 'SECONDS')
+            }
+        }
+        
+        stage('Integration Tests') {
+            steps {
+                echo 'Running integration tests...'
+                sh './test-api.sh'
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Cleaning up...'
+            sh 'docker-compose down || true'
+            cleanWs()
+        }
+        
+        success {
+            echo '✅ Build and deployment successful!'
+        }
+        
+        failure {
+            echo '❌ Build or deployment failed!'
+            sh 'docker-compose logs || true'
+        }
+    }
+}

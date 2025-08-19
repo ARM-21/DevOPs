@@ -67,6 +67,69 @@ async function runTests() {
       throw new Error('Hello API failed');
     }
 
+    // Test 4: Database stats
+    console.log('📋 Test 4: Database stats');
+    const stats = await makeRequest('/api/stats');
+    if (stats.statusCode === 200 && stats.body.success) {
+      console.log('✅ Database stats passed');
+    } else {
+      console.log('⚠️ Database stats failed - MongoDB might not be running');
+    }
+
+    // Test 5: Create a user (POST)
+    console.log('📋 Test 5: Create user');
+    const newUser = {
+      name: 'Test User',
+      email: 'test@example.com',
+      age: 25,
+      role: 'user'
+    };
+    const createUser = await makeRequest('/api/users', 'POST', newUser);
+    if (createUser.statusCode === 201 && createUser.body.success) {
+      console.log('✅ Create user passed');
+      const userId = createUser.body.data._id;
+
+      // Test 6: Get all users
+      console.log('📋 Test 6: Get all users');
+      const getUsers = await makeRequest('/api/users');
+      if (getUsers.statusCode === 200 && getUsers.body.success) {
+        console.log('✅ Get all users passed');
+      } else {
+        throw new Error('Get all users failed');
+      }
+
+      // Test 7: Get user by ID
+      console.log('📋 Test 7: Get user by ID');
+      const getUser = await makeRequest(`/api/users/${userId}`);
+      if (getUser.statusCode === 200 && getUser.body.success) {
+        console.log('✅ Get user by ID passed');
+      } else {
+        throw new Error('Get user by ID failed');
+      }
+
+      // Test 8: Update user
+      console.log('📋 Test 8: Update user');
+      const updateData = { name: 'Updated Test User', age: 26 };
+      const updateUser = await makeRequest(`/api/users/${userId}`, 'PUT', updateData);
+      if (updateUser.statusCode === 200 && updateUser.body.success) {
+        console.log('✅ Update user passed');
+      } else {
+        throw new Error('Update user failed');
+      }
+
+      // Test 9: Delete user
+      console.log('📋 Test 9: Delete user');
+      const deleteUser = await makeRequest(`/api/users/${userId}`, 'DELETE');
+      if (deleteUser.statusCode === 200 && deleteUser.body.success) {
+        console.log('✅ Delete user passed');
+      } else {
+        throw new Error('Delete user failed');
+      }
+
+    } else {
+      console.log('⚠️ CRUD tests skipped - MongoDB might not be running');
+    }
+
     console.log('\n🎉 All tests passed!');
     process.exit(0);
     

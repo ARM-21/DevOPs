@@ -3,16 +3,26 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://admin:admin@localhost:27017/devops_db?authSource=admin';
+// MongoDB connection - using environment variables for security
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/devops_db';
 
-mongoose.connect(MONGODB_URI)
+// Enhanced MongoDB connection with better options
+mongoose.connect(MONGODB_URI, {
+  serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+  bufferMaxEntries: 0, // Disable mongoose buffering
+  bufferCommands: false, // Disable mongoose buffering
+})
 .then(() => {
   console.log('✅ Connected to MongoDB successfully');
-  console.log(`🔗 Using MongoDB URI: ${MONGODB_URI.replace(/admin:admin/, 'admin:****')}`);
+  // Log connection info without exposing credentials
+  const sanitizedUri = MONGODB_URI.replace(/\/\/[^:]*:[^@]*@/, '//****:****@');
+  console.log(`🔗 Using MongoDB URI: ${sanitizedUri}`);
 })
 .catch((error) => {
   console.error('❌ MongoDB connection error:', error.message);
+  console.error('❌ Please check if MongoDB is running and credentials are correct');
+  process.exit(1);
 });
 
 // User Schema

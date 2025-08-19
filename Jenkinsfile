@@ -25,6 +25,14 @@ pipeline {
                     sh 'chmod +x test-api.sh'
                     sh 'chmod +x setup-and-run.sh'
                     
+                    // Create environment file for Jenkins if not exists
+                    sh '''
+                        if [ ! -f .env ]; then
+                            echo "Creating environment file for Jenkins build..."
+                            cp .env.example .env
+                        fi
+                    '''
+                    
                     // Install jq if not present (for API testing)
                     sh '''
                         if ! command -v jq &> /dev/null; then

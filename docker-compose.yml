@@ -6,13 +6,15 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: devops_db
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
       - mongodb_data:/data/db
     networks:
       - devops_network
+    env_file:
+      - .env
 
   app:
     build: .
@@ -23,11 +25,13 @@ services:
     depends_on:
       - mongodb
     environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - MONGODB_URI=mongodb://admin:admin@mongodb:27017/devops_db?authSource=admin
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${PORT:-3000}
+      - MONGODB_URI=${MONGODB_URI}
     networks:
       - devops_network
+    env_file:
+      - .env
 
 volumes:
   mongodb_data:

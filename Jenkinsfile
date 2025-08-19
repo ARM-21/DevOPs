@@ -226,16 +226,19 @@ pipeline {
             script {
                 // Send success notifications
                 // You can add Slack, email, or other notifications here
+                echo 'Success notifications would go here'
             }
         }
         
         failure {
             echo '❌ Pipeline failed!'
             script {
-                // Send failure notifications
-                // You can add Slack, email, or other notifications here
                 // Collect failure logs
                 sh 'docker-compose logs || true'
+                
+                // Send failure notifications
+                // You can add Slack, email, or other notifications here
+                echo 'Failure notifications would go here'
             }
         }
         

@@ -16,36 +16,31 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                echo '🛠️ Quick setup...'
-                script {
-                    // Install Node.js if not present
-                    sh '''
-                        if ! command -v node &> /dev/null; then
-                            echo "Installing Node.js..."
-                            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-                            sudo apt-get install -y nodejs
-                        fi
-                    '''
-                    
-                    // Make scripts executable
-                    sh 'chmod +x *.sh || true'
-                    
-                    // Create .env file directly
-                    sh '''
-                        echo "Creating .env file..."
-                        cat > .env << EOF
-# MongoDB Configuration
+                echo '🛠️ Setting up environment...'
+                
+                // Check Node.js availability
+                sh '''
+                    echo "Checking Node.js availability..."
+                    node --version || echo "Node.js not found - continuing anyway"
+                '''
+                
+                // Make scripts executable
+                sh 'chmod +x *.sh || true'
+                
+                // Create .env file - simplified approach
+                sh '''
+                    echo "Creating .env file for CI..."
+                    cat > .env << EOF
 MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=admin
-MONGO_INITDB_DATABASE=devops_db
-
-# Application Configuration
-NODE_ENV=development
+MONGO_INITDB_ROOT_PASSWORD=admin123
+MONGO_INITDB_DATABASE=devops_test_db
+NODE_ENV=test
 PORT=3000
-MONGODB_URI=mongodb://admin:admin@mongodb:27017/devops_db?authSource=admin
+MONGODB_URI=mongodb://admin:admin123@mongodb:27017/devops_test_db?authSource=admin
 EOF
-                    '''
-                }
+                    echo ".env file created successfully"
+                    ls -la .env
+                '''
             }
         }
         

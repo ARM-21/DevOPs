@@ -19,20 +19,72 @@ jobs:
           node-version: '20.x'
           cache: 'npm'
 
+      - name: Create environment file
+        run: |
+          cat > .env << EOF
+          # MongoDB Configuration
+          MONGO_INITDB_ROOT_USERNAME=admin
+          MONGO_INITDB_ROOT_PASSWORD=admin
+          MONGO_INITDB_DATABASE=devops_db
+          
+          # Application Configuration
+          NODE_ENV=development
+          PORT=3000
+          MONGODB_URI=mongodb://admin:admin@mongodb:27017/devops_db?authSource=admin
+          EOF
+
+      - name: Make scripts executable
+        run: |
+          chmod +x run.sh
+          chmod +x test-api.sh
+          chmod +x setup-and-run.sh
+
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          sudo apt-get update && sudo apt-get install -y jq
 
       - name: Build project
         run: npm run build
 
-      - name: Start application in background
-        run: npm start &
+      - name: Start services with Docker Compose
+        run: |
+          docker compose up -d
+          sleep 30
 
-      - name: Wait for application to start
-        run: sleep 5
+      - name: Check service status
+        run: |
+          docker compose ps
+          docker compose logs app
+          docker compose logs mongodb
+
+      - name: Wait for API to be ready
+        run: |
+          timeout=60
+          counter=0
+          while [ $counter -lt $timeout ]; do
+            if curl -s http://localhost:3000/health >/dev/null 2>&1; then
+              echo "✅ API is ready!"
+              break
+            fi
+            counter=$((counter + 1))
+            sleep 1
+          done
+          if [ $counter -eq $timeout ]; then
+            echo "❌ API failed to start within $timeout seconds"
+            docker compose logs app
+            exit 1
+          fi
 
       - name: Run tests
         run: npm test
+
+      - name: Run integration tests
+        run: ./test-api.sh
+
+      - name: Stop services
+        if: always()
+        run: docker compose down
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2.2.0
